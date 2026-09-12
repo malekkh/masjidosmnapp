@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { ClipboardList, LogOut, ShieldCheck, UserRoundPlus } from "lucide-react";
+import { CalendarDays, ClipboardList, LogOut, ShieldCheck, UserRoundPlus } from "lucide-react";
 import { getCurrentProfile } from "@/lib/auth";
 import { signOut } from "@/app/dashboard/actions";
 import SubmitButton from "@/components/SubmitButton";
@@ -8,6 +8,7 @@ import SubmitButton from "@/components/SubmitButton";
 const navItems = [
   { href: "/dashboard", label: "نظرة عامة", icon: ShieldCheck },
   { href: "/dashboard/questions", label: "الأسئلة والفتاوى", icon: ClipboardList },
+  { href: "/dashboard/announcements", label: "إعلانات المسجد", icon: CalendarDays },
   { href: "/dashboard/sheikhs", label: "حسابات المشايخ", icon: UserRoundPlus },
 ];
 
@@ -33,7 +34,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         <p className="mt-1 text-xs text-[var(--muted)]">{profile.full_name ?? "مسؤول"} · {profile.role === "admin" ? "إدارة" : "شيخ"}</p>
         <nav className="mt-6 flex flex-col gap-1">
           {navItems
-            .filter((item) => item.href !== "/dashboard/sheikhs" || profile.role === "admin")
+            .filter((item) => (item.href !== "/dashboard/sheikhs" && item.href !== "/dashboard/announcements") || profile.role === "admin")
             .map((item) => (
               <Link
                 key={item.href}

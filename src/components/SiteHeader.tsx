@@ -9,6 +9,7 @@ const navLinks = [
   { href: "/quran", label: "القرآن" },
   { href: "/adhkar", label: "الأذكار" },
   { href: "/fatawa", label: "الفتاوى" },
+  { href: "/announcements", label: "الإعلانات" },
   { href: "/social", label: "تواصل معنا" },
 ];
 

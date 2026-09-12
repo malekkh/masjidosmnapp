@@ -12,6 +12,9 @@ update public.social_links set url = 'https://your-real-link' where platform = '
 ```
 
 3. `migrations/0002_drop_announcements.sql` — يحذف جدول `announcements` وسياساته (لم تعد الميزة مستخدمة في الموقع). نفّذه فقط على قاعدة بيانات كانت تحتوي على هذا الجدول مسبقًا.
+4. `migrations/0004_restore_announcements.sql` — يعيد جدول الإعلانات وسياسات القراءة العامة الحالية وإدارة المسؤول، مع حقل صورة اختياري.
+
+> إذا كانت قاعدة البيانات الجديدة ستُنشأ من `schema.sql`، نفّذ `0004_restore_announcements.sql` بعده. لا تعاود تنفيذ `0002_drop_announcements.sql` بعد تفعيل الإعلانات.
 
 ## إنشاء أول حساب إدارة (Admin)
 

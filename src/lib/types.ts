@@ -29,3 +29,16 @@ export type SocialLink = {
   sort_order: number;
   created_at: string;
 };
+
+export type Announcement = {
+  id: string;
+  title: string;
+  description: string | null;
+  speaker: string | null;
+  starts_at: string;
+  location: string | null;
+  image_url: string | null;
+  published: boolean;
+  created_by: string;
+  created_at: string;
+};

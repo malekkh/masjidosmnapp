@@ -1,4 +1,4 @@
-import { ArrowLeft, BookOpen, ChevronLeft, Clock3, MapPin, MessageCircleQuestion, MoonStar } from "lucide-react";
+import { ArrowLeft, BookOpen, CalendarDays, ChevronLeft, Clock3, MapPin, MessageCircleQuestion, MoonStar } from "lucide-react";
 import Link from "next/link";
 import HonorificSuffix from "@/components/HonorificSuffix";
 import SiteHeader from "@/components/SiteHeader";
@@ -10,6 +10,7 @@ const quickLinks = [
   ["القرآن الكريم", "تلاوة وتدبر", BookOpen, "/quran"],
   ["الأذكار اليومية", "حصن المسلم", MoonStar, "/adhkar"],
   ["اسأل عن دينك", "إجابة موثوقة", MessageCircleQuestion, "/fatawa"],
+  ["إعلانات المسجد", "آخر المستجدات", CalendarDays, "/announcements"],
 ] as const;
 
 const PRAYER_ORDER: (keyof PrayerTimes)[] = ["Fajr", "Sunrise", "Dhuhr", "Asr", "Maghrib", "Isha"];
@@ -74,7 +75,7 @@ export default async function Home() {
       </section>
 
       <section className="border-y border-[var(--line)] bg-white/60">
-        <div className="mx-auto grid max-w-7xl grid-cols-1 divide-y divide-[var(--line)] px-5 sm:grid-cols-3 sm:divide-x sm:divide-y-0 sm:px-10">
+        <div className="mx-auto grid max-w-7xl grid-cols-1 divide-y divide-[var(--line)] px-5 sm:grid-cols-2 sm:divide-x sm:divide-y-0 lg:grid-cols-4 lg:px-10">
           {quickLinks.map(([title, detail, Icon, href]) => (
             <Link href={href} key={title} className="group flex items-center gap-4 px-2 py-5 sm:px-6">
               <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#e7f1eb] text-[var(--emerald)]">

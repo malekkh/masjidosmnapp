@@ -29,6 +29,7 @@ create table public.announcements (
   speaker text,
   starts_at timestamptz not null,
   location text,
+  image_url text,
   published boolean not null default false,
   created_by uuid not null references public.profiles(id) on delete restrict,
   created_at timestamptz not null default now()
