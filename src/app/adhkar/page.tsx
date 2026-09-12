@@ -1,7 +1,8 @@
 import Link from "next/link";
-import { ChevronLeft, MoonStar } from "lucide-react";
+import { MoonStar } from "lucide-react";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
+import AdhkarCategorySearch from "@/components/AdhkarCategorySearch";
 import { getAdhkarCategories } from "@/lib/adhkar";
 
 export default async function AdhkarPage() {
@@ -25,18 +26,7 @@ export default async function AdhkarPage() {
             تعذّر جلب الأذكار حاليًا، يرجى المحاولة لاحقًا.
           </p>
         ) : (
-          <div className="mt-10 space-y-3 pb-16">
-            {categories.map((category) => (
-              <Link
-                key={category.id}
-                href={`/adhkar/${category.id}`}
-                className="flex items-center justify-between rounded-2xl border border-[var(--line)] bg-white p-5"
-              >
-                <strong className="text-base text-[var(--emerald-deep)]">{category.title}</strong>
-                <ChevronLeft className="text-[var(--muted)]" size={18} />
-              </Link>
-            ))}
-          </div>
+          <AdhkarCategorySearch categories={categories} />
         )}
       </div>
       <SiteFooter />
