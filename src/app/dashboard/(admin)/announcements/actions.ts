@@ -26,10 +26,12 @@ async function requireAdmin() {
 export async function createAnnouncement(formData: FormData) {
   const profile = await requireAdmin();
   const announcement = readAnnouncement(formData);
-  if (!profile || !announcement) return;
+  if (!profile) throw new Error("Only admin users can create announcements.");
+  if (!announcement) throw new Error("Announcement title and date are required.");
 
   const supabase = await createClient();
-  await supabase.from("announcements").insert({ ...announcement, created_by: profile.id });
+  const { error } = await supabase.from("announcements").insert({ ...announcement, created_by: profile.id });
+  if (error) throw new Error(`Announcement insert failed: ${error.message}`);
   revalidatePath("/announcements");
   revalidatePath("/dashboard/announcements");
 }
@@ -38,10 +40,12 @@ export async function updateAnnouncement(formData: FormData) {
   const profile = await requireAdmin();
   const announcement = readAnnouncement(formData);
   const id = String(formData.get("id") ?? "");
-  if (!profile || !announcement || !id) return;
+  if (!profile) throw new Error("Only admin users can update announcements.");
+  if (!announcement || !id) throw new Error("Announcement data is incomplete.");
 
   const supabase = await createClient();
-  await supabase.from("announcements").update(announcement).eq("id", id);
+  const { error } = await supabase.from("announcements").update(announcement).eq("id", id);
+  if (error) throw new Error(`Announcement update failed: ${error.message}`);
   revalidatePath("/announcements");
   revalidatePath("/dashboard/announcements");
 }
@@ -49,10 +53,12 @@ export async function updateAnnouncement(formData: FormData) {
 export async function deleteAnnouncement(formData: FormData) {
   const profile = await requireAdmin();
   const id = String(formData.get("id") ?? "");
-  if (!profile || !id) return;
+  if (!profile) throw new Error("Only admin users can delete announcements.");
+  if (!id) throw new Error("Announcement id is required.");
 
   const supabase = await createClient();
-  await supabase.from("announcements").delete().eq("id", id);
+  const { error } = await supabase.from("announcements").delete().eq("id", id);
+  if (error) throw new Error(`Announcement delete failed: ${error.message}`);
   revalidatePath("/announcements");
   revalidatePath("/dashboard/announcements");
 }
