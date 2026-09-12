@@ -18,7 +18,10 @@ export default async function AdminAnnouncementsPage() {
   }
 
   const supabase = await createClient();
-  const { data, error } = await supabase.from("announcements").select("*").order("starts_at", { ascending: false });
+  const { data, error } = await supabase
+    .from("announcements")
+    .select("*")
+    .order("starts_at", { ascending: false });
   if (error) throw new Error(`Announcement list failed: ${error.message}`);
   const announcements = (data as Announcement[]) ?? [];
 
@@ -27,8 +30,12 @@ export default async function AdminAnnouncementsPage() {
       <div className="flex items-center gap-3">
         <CalendarDays className="text-[var(--emerald)]" size={32} />
         <div>
-          <p className="text-sm font-bold text-[var(--emerald)]">إدارة المحتوى</p>
-          <h1 className="text-3xl font-black text-[var(--emerald-deep)]">إعلانات المسجد</h1>
+          <p className="text-sm font-bold text-[var(--emerald)]">
+            إدارة المحتوى
+          </p>
+          <h1 className="text-3xl font-black text-[var(--emerald-deep)]">
+            إعلانات المسجد
+          </h1>
         </div>
       </div>
 
@@ -36,7 +43,10 @@ export default async function AdminAnnouncementsPage() {
 
       <div className="mt-8 space-y-5 pb-12">
         {announcements.map((announcement) => (
-          <AnnouncementItemForm key={announcement.id} announcement={announcement} />
+          <AnnouncementItemForm
+            key={announcement.id}
+            announcement={announcement}
+          />
         ))}
       </div>
     </div>

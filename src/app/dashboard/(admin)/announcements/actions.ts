@@ -17,7 +17,15 @@ function readAnnouncement(formData: FormData) {
   const date = new Date(startsAt);
 
   if (!title || Number.isNaN(date.getTime())) return null;
-  return { title, description, speaker, location, image_url: imageUrl, starts_at: date.toISOString(), published };
+  return {
+    title,
+    description,
+    speaker,
+    location,
+    image_url: imageUrl,
+    starts_at: date.toISOString(),
+    published,
+  };
 }
 
 async function requireAdmin() {
@@ -27,7 +35,7 @@ async function requireAdmin() {
 
 export async function createAnnouncement(
   _prevState: AnnouncementActionState,
-  formData: FormData
+  formData: FormData,
 ): Promise<AnnouncementActionState> {
   const profile = await requireAdmin();
   if (!profile) return { error: "هذا الإجراء متاح للمسؤول فقط." };
@@ -43,7 +51,10 @@ export async function createAnnouncement(
     .single();
 
   if (error) return { error: `تعذّر حفظ الإعلان: ${error.message}` };
-  if (!data) return { error: "تعذّر حفظ الإعلان: لم يتم إرجاع أي بيانات من قاعدة البيانات." };
+  if (!data)
+    return {
+      error: "تعذّر حفظ الإعلان: لم يتم إرجاع أي بيانات من قاعدة البيانات.",
+    };
 
   revalidatePath("/announcements");
   revalidatePath("/dashboard/announcements");
@@ -52,7 +63,7 @@ export async function createAnnouncement(
 
 export async function updateAnnouncement(
   _prevState: AnnouncementActionState,
-  formData: FormData
+  formData: FormData,
 ): Promise<AnnouncementActionState> {
   const profile = await requireAdmin();
   if (!profile) return { error: "هذا الإجراء متاح للمسؤول فقط." };
@@ -62,10 +73,18 @@ export async function updateAnnouncement(
   if (!announcement || !id) return { error: "بيانات الإعلان غير مكتملة." };
 
   const supabase = await createClient();
-  const { data, error } = await supabase.from("announcements").update(announcement).eq("id", id).select().single();
+  const { data, error } = await supabase
+    .from("announcements")
+    .update(announcement)
+    .eq("id", id)
+    .select()
+    .single();
 
   if (error) return { error: `تعذّر تحديث الإعلان: ${error.message}` };
-  if (!data) return { error: "تعذّر تحديث الإعلان: لم يتم إرجاع أي بيانات من قاعدة البيانات." };
+  if (!data)
+    return {
+      error: "تعذّر تحديث الإعلان: لم يتم إرجاع أي بيانات من قاعدة البيانات.",
+    };
 
   revalidatePath("/announcements");
   revalidatePath("/dashboard/announcements");
@@ -74,7 +93,7 @@ export async function updateAnnouncement(
 
 export async function deleteAnnouncement(
   _prevState: AnnouncementActionState,
-  formData: FormData
+  formData: FormData,
 ): Promise<AnnouncementActionState> {
   const profile = await requireAdmin();
   if (!profile) return { error: "هذا الإجراء متاح للمسؤول فقط." };
