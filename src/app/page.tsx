@@ -3,7 +3,6 @@ import Link from "next/link";
 import HonorificSuffix from "@/components/HonorificSuffix";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
-import AnnouncementsSection from "@/components/AnnouncementsSection";
 import { getTodayPrayerTimes, prayerLabel, type PrayerTimes } from "@/lib/prayer-times";
 import { MOSQUE_LOCATION_NAME, PRAYER_TIMES_SOURCE_NAME } from "@/lib/constants";
 
@@ -38,9 +37,6 @@ export default async function Home() {
             <Link href="/quran" className="flex items-center gap-2 rounded-xl bg-[var(--emerald)] px-5 py-3 text-sm font-bold text-white">
               ابدأ التلاوة <ArrowLeft size={17} />
             </Link>
-            <a href="#events" className="flex items-center gap-2 rounded-xl border border-[var(--line)] bg-white px-5 py-3 text-sm font-bold text-[var(--emerald)]">
-              تصفح الأنشطة
-            </a>
           </div>
         </div>
 
@@ -93,8 +89,6 @@ export default async function Home() {
           ))}
         </div>
       </section>
-
-      <AnnouncementsSection />
 
       <SiteFooter />
     </main>
