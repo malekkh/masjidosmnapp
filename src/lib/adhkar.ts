@@ -1,8 +1,6 @@
 const API_BASE = "https://www.hisnmuslim.com/api/ar";
-
-// Only these categories are shown on the site: 27 = أذكار الصباح والمساء
-// (the source bundles morning & evening into one category), 25 = الأذكار بعد السلام من الصلاة.
-export const ADHKAR_CATEGORY_IDS = [27, 25];
+const MAX_CATEGORY_ID = 140;
+const BATCH_SIZE = 20;
 
 export type AdhkarItem = {
   id: number;
@@ -50,11 +48,34 @@ async function fetchCategory(id: number): Promise<AdhkarCategory | null> {
 }
 
 export async function getAdhkarCategories(): Promise<AdhkarCategory[]> {
-  const results = await Promise.all(ADHKAR_CATEGORY_IDS.map(fetchCategory));
-  return results.filter((category): category is AdhkarCategory => category !== null);
+  const categories: AdhkarCategory[] = [];
+
+  for (let start = 1; start <= MAX_CATEGORY_ID; start += BATCH_SIZE) {
+    const ids = Array.from({ length: BATCH_SIZE }, (_, index) => start + index).filter(
+      (id) => id <= MAX_CATEGORY_ID
+    );
+    const results = await Promise.all(ids.map(fetchCategory));
+    for (const category of results) {
+      if (!category || category.items.length === 0) continue;
+
+      const uniqueItems = new Map<string, AdhkarItem>();
+      for (const item of category.items) {
+        const key = item.text.trim().replace(/\s+/g, " ");
+        if (!uniqueItems.has(key)) uniqueItems.set(key, item);
+      }
+
+      categories.push({ ...category, items: [...uniqueItems.values()] });
+    }
+  }
+
+  const uniqueCategories = new Map<number, AdhkarCategory>();
+  for (const category of categories) {
+    if (!uniqueCategories.has(category.id)) uniqueCategories.set(category.id, category);
+  }
+
+  return [...uniqueCategories.values()].sort((a, b) => a.id - b.id);
 }
 
 export async function getAdhkarCategory(id: number): Promise<AdhkarCategory | null> {
-  if (!ADHKAR_CATEGORY_IDS.includes(id)) return null;
   return fetchCategory(id);
 }

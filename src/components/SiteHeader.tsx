@@ -7,7 +7,8 @@ import logo from "../../public/logo.jpg";
 const navLinks = [
   { href: "/", label: "الرئيسية" },
   { href: "/quran", label: "القرآن" },
-  { href: "/adhkar", label: "الأذكار" },
+  { href: "/adhkar", label: "أذكار" },
+  { href: "/ibadah", label: "العبادات" },
   { href: "/fatawa", label: "الفتاوى" },
   { href: "/announcements", label: "الإعلانات" },
   { href: "/social", label: "تواصل معنا" },

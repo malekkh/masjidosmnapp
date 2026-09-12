@@ -1,4 +1,4 @@
-import { ArrowLeft, BookOpen, CalendarDays, ChevronLeft, Clock3, MapPin, MessageCircleQuestion, MoonStar } from "lucide-react";
+import { ArrowLeft, BookOpen, CalendarDays, ChevronLeft, Clock3, HeartHandshake, MapPin, MessageCircleQuestion, MoonStar } from "lucide-react";
 import Link from "next/link";
 import HonorificSuffix from "@/components/HonorificSuffix";
 import SiteHeader from "@/components/SiteHeader";
@@ -8,7 +8,8 @@ import { MOSQUE_LOCATION_NAME, PRAYER_TIMES_SOURCE_NAME } from "@/lib/constants"
 
 const quickLinks = [
   ["القرآن الكريم", "تلاوة وتدبر", BookOpen, "/quran"],
-  ["الأذكار اليومية", "حصن المسلم", MoonStar, "/adhkar"],
+  ["أذكار", "حصن المسلم", MoonStar, "/adhkar"],
+  ["العبادات", "دليل الطاعات", HeartHandshake, "/ibadah"],
   ["اسأل عن دينك", "إجابة موثوقة", MessageCircleQuestion, "/fatawa"],
   ["إعلانات المسجد", "آخر المستجدات", CalendarDays, "/announcements"],
 ] as const;
@@ -29,7 +30,7 @@ export default async function Home() {
           </p>
           <h1 className="max-w-xl text-4xl font-black leading-[1.25] tracking-tight text-[var(--emerald-deep)] sm:text-5xl">
             مسجد عثمان بن عفان
-            <HonorificSuffix />
+            <HonorificSuffix sizeClassName="text-[0.5em]" />
           </h1>
           <p className="mt-6 max-w-lg text-base leading-8 text-[var(--muted)]">
             نقرّب إليكم المسجد، ونشارككم مواقيت الصلاة والدروس والذكر في كل يوم.
@@ -75,7 +76,7 @@ export default async function Home() {
       </section>
 
       <section className="border-y border-[var(--line)] bg-white/60">
-        <div className="mx-auto grid max-w-7xl grid-cols-1 divide-y divide-[var(--line)] px-5 sm:grid-cols-2 sm:divide-x sm:divide-y-0 lg:grid-cols-4 lg:px-10">
+        <div className="mx-auto grid max-w-7xl grid-cols-1 divide-y divide-[var(--line)] px-5 sm:grid-cols-2 sm:divide-x sm:divide-y-0 lg:grid-cols-5 lg:px-10">
           {quickLinks.map(([title, detail, Icon, href]) => (
             <Link href={href} key={title} className="group flex items-center gap-4 px-2 py-5 sm:px-6">
               <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#e7f1eb] text-[var(--emerald)]">
