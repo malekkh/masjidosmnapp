@@ -19,7 +19,7 @@ export default async function AnnouncementsPage() {
   sinceDate.setDate(sinceDate.getDate() - 7);
   const untilDate = new Date();
   untilDate.setDate(untilDate.getDate() + 7);
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from("announcements")
     .select("id, title, description, speaker, starts_at, location, image_url, published, created_by, created_at")
     .eq("published", true)
@@ -28,6 +28,7 @@ export default async function AnnouncementsPage() {
     .order("starts_at", { ascending: false })
     .limit(20);
 
+  if (error) throw new Error(`Announcements list failed: ${error.message}`);
   const announcements = (data as Announcement[]) ?? [];
 
   return (

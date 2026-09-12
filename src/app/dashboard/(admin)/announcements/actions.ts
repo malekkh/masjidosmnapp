@@ -4,6 +4,8 @@ import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentProfile } from "@/lib/auth";
 
+export type AnnouncementActionState = { error?: string; success?: boolean };
+
 function readAnnouncement(formData: FormData) {
   const title = String(formData.get("title") ?? "").trim();
   const description = String(formData.get("description") ?? "").trim() || null;
@@ -23,42 +25,68 @@ async function requireAdmin() {
   return profile?.role === "admin" ? profile : null;
 }
 
-export async function createAnnouncement(formData: FormData) {
+export async function createAnnouncement(
+  _prevState: AnnouncementActionState,
+  formData: FormData
+): Promise<AnnouncementActionState> {
   const profile = await requireAdmin();
+  if (!profile) return { error: "هذا الإجراء متاح للمسؤول فقط." };
+
   const announcement = readAnnouncement(formData);
-  if (!profile) throw new Error("Only admin users can create announcements.");
-  if (!announcement) throw new Error("Announcement title and date are required.");
+  if (!announcement) return { error: "يرجى إدخال العنوان والتاريخ بشكل صحيح." };
 
   const supabase = await createClient();
-  const { error } = await supabase.from("announcements").insert({ ...announcement, created_by: profile.id });
-  if (error) throw new Error(`Announcement insert failed: ${error.message}`);
+  const { data, error } = await supabase
+    .from("announcements")
+    .insert({ ...announcement, created_by: profile.id })
+    .select()
+    .single();
+
+  if (error) return { error: `تعذّر حفظ الإعلان: ${error.message}` };
+  if (!data) return { error: "تعذّر حفظ الإعلان: لم يتم إرجاع أي بيانات من قاعدة البيانات." };
+
   revalidatePath("/announcements");
   revalidatePath("/dashboard/announcements");
+  return { success: true };
 }
 
-export async function updateAnnouncement(formData: FormData) {
+export async function updateAnnouncement(
+  _prevState: AnnouncementActionState,
+  formData: FormData
+): Promise<AnnouncementActionState> {
   const profile = await requireAdmin();
+  if (!profile) return { error: "هذا الإجراء متاح للمسؤول فقط." };
+
   const announcement = readAnnouncement(formData);
   const id = String(formData.get("id") ?? "");
-  if (!profile) throw new Error("Only admin users can update announcements.");
-  if (!announcement || !id) throw new Error("Announcement data is incomplete.");
+  if (!announcement || !id) return { error: "بيانات الإعلان غير مكتملة." };
 
   const supabase = await createClient();
-  const { error } = await supabase.from("announcements").update(announcement).eq("id", id);
-  if (error) throw new Error(`Announcement update failed: ${error.message}`);
+  const { data, error } = await supabase.from("announcements").update(announcement).eq("id", id).select().single();
+
+  if (error) return { error: `تعذّر تحديث الإعلان: ${error.message}` };
+  if (!data) return { error: "تعذّر تحديث الإعلان: لم يتم إرجاع أي بيانات من قاعدة البيانات." };
+
   revalidatePath("/announcements");
   revalidatePath("/dashboard/announcements");
+  return { success: true };
 }
 
-export async function deleteAnnouncement(formData: FormData) {
+export async function deleteAnnouncement(
+  _prevState: AnnouncementActionState,
+  formData: FormData
+): Promise<AnnouncementActionState> {
   const profile = await requireAdmin();
+  if (!profile) return { error: "هذا الإجراء متاح للمسؤول فقط." };
+
   const id = String(formData.get("id") ?? "");
-  if (!profile) throw new Error("Only admin users can delete announcements.");
-  if (!id) throw new Error("Announcement id is required.");
+  if (!id) return { error: "معرّف الإعلان مطلوب." };
 
   const supabase = await createClient();
   const { error } = await supabase.from("announcements").delete().eq("id", id);
-  if (error) throw new Error(`Announcement delete failed: ${error.message}`);
+  if (error) return { error: `تعذّر حذف الإعلان: ${error.message}` };
+
   revalidatePath("/announcements");
   revalidatePath("/dashboard/announcements");
+  return { success: true };
 }
