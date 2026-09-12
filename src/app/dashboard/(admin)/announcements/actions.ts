@@ -11,7 +11,6 @@ function readAnnouncement(formData: FormData) {
   const description = String(formData.get("description") ?? "").trim() || null;
   const speaker = String(formData.get("speaker") ?? "").trim() || null;
   const location = String(formData.get("location") ?? "").trim() || null;
-  const imageUrl = String(formData.get("imageUrl") ?? "").trim() || null;
   const startsAt = String(formData.get("startsAt") ?? "");
   const published = formData.get("published") === "on";
   const date = new Date(startsAt);
@@ -22,7 +21,6 @@ function readAnnouncement(formData: FormData) {
     description,
     speaker,
     location,
-    image_url: imageUrl,
     starts_at: date.toISOString(),
     published,
   };

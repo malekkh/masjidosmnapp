@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Image from "next/image";
 import { CalendarDays, MapPin } from "lucide-react";
 import SiteFooter from "@/components/SiteFooter";
 import SiteHeader from "@/components/SiteHeader";
@@ -22,7 +21,7 @@ export default async function AnnouncementsPage() {
   const { data, error } = await supabase
     .from("announcements")
     .select(
-      "id, title, description, speaker, starts_at, location, image_url, published, created_by, created_at",
+      "id, title, description, speaker, starts_at, location, published, created_by, created_at",
     )
     .eq("published", true)
     .gte("starts_at", sinceDate.toISOString())
@@ -63,15 +62,6 @@ export default async function AnnouncementsPage() {
                 key={announcement.id}
                 className="overflow-hidden rounded-2xl border border-[var(--line)] bg-white"
               >
-                {announcement.image_url && (
-                  <Image
-                    src={announcement.image_url}
-                    alt=""
-                    width={1200}
-                    height={675}
-                    className="max-h-72 w-full object-cover"
-                  />
-                )}
                 <div className="p-6">
                   <p className="flex items-center gap-2 text-xs font-bold text-[var(--amber)]">
                     <CalendarDays size={15} />{" "}

@@ -5,13 +5,11 @@ create table if not exists public.announcements (
   speaker text,
   starts_at timestamptz not null,
   location text,
-  image_url text,
   published boolean not null default false,
   created_by uuid not null references public.profiles(id) on delete restrict,
   created_at timestamptz not null default now()
 );
 
-alter table public.announcements add column if not exists image_url text;
 alter table public.announcements enable row level security;
 
 drop policy if exists "Published announcements are public" on public.announcements;

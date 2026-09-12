@@ -45,15 +45,6 @@ export default function AnnouncementFields({ announcement }: { announcement?: An
         />
       </label>
       <label className="text-sm font-bold text-[var(--emerald-deep)] sm:col-span-2">
-        رابط الصورة (اختياري)
-        <input
-          type="url"
-          name="imageUrl"
-          defaultValue={announcement?.image_url ?? ""}
-          className="mt-2 w-full rounded-xl border border-[var(--line)] p-3 font-normal outline-none"
-        />
-      </label>
-      <label className="text-sm font-bold text-[var(--emerald-deep)] sm:col-span-2">
         الوصف
         <textarea
           name="description"

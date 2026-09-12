@@ -37,7 +37,6 @@ export type Announcement = {
   speaker: string | null;
   starts_at: string;
   location: string | null;
-  image_url: string | null;
   published: boolean;
   created_by: string;
   created_at: string;
