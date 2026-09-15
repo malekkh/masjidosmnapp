@@ -9,7 +9,7 @@ import { MOSQUE_LOCATION_NAME, PRAYER_TIMES_SOURCE_NAME } from "@/lib/constants"
 const quickLinks = [
   ["القرآن الكريم", "تلاوة وتدبر", BookOpen, "/quran"],
   ["أذكار", "حصن المسلم", MoonStar, "/adhkar"],
-  ["العبادات", "دليل الطاعات", HeartHandshake, "/ibadah"],
+  ["أحكام العبادات", "فتاوى موثّقة", HeartHandshake, "/ibadah"],
   ["اسأل عن دينك", "إجابة موثوقة", MessageCircleQuestion, "/fatawa"],
   ["إعلانات المسجد", "آخر المستجدات", CalendarDays, "/announcements"],
 ] as const;

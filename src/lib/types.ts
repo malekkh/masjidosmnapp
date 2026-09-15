@@ -41,3 +41,29 @@ export type Announcement = {
   created_by: string;
   created_at: string;
 };
+
+export type IbadahCategory = {
+  id: string;
+  slug: string;
+  name: string;
+  icon: string;
+  sort_order: number;
+  created_at: string;
+};
+
+export type IbadahRuling = {
+  id: string;
+  category_id: string;
+  title: string;
+  definition: string;
+  question: string | null;
+  answer: string;
+  source_name: string;
+  source_url: string;
+  scholar: string | null;
+  madhhab: string | null;
+  verified: boolean;
+  sort_order: number;
+  created_at: string;
+  updated_at: string;
+};

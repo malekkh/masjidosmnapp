@@ -12,9 +12,13 @@ update public.social_links set url = 'https://your-real-link' where platform = '
 ```
 
 3. `migrations/0002_drop_announcements.sql` — يحذف جدول `announcements` وسياساته (لم تعد الميزة مستخدمة في الموقع). نفّذه فقط على قاعدة بيانات كانت تحتوي على هذا الجدول مسبقًا.
-4. `migrations/0004_restore_announcements.sql` — يعيد جدول الإعلانات وسياسات القراءة العامة الحالية وإدارة المسؤول، مع حقل صورة اختياري.
+4. `migrations/0004_restore_announcements.sql` — يعيد جدول الإعلانات وسياسات القراءة العامة الحالية وإدارة المسؤول.
+5. `migrations/0005_ibadah_rulings.sql` — جدولا `ibadah_categories` و`ibadah_rulings` لقسم "أحكام العبادات"، مع بيانات أولية (15 حكمًا فقهيًا موثّقًا من إسلام ويب وموقع الشيخ ابن باز، برابط المصدر الأصلي لكل حكم).
+6. `migrations/0006_ibadah_definitions.sql` — يضيف عمود `definition` (التعريف) لكل حكم، ويضيف حكمين جديدين عن فريضة الزكاة (زكاة المال) لتمييزها عن زكاة الفطر ضمن قسم أحكام الزكاة.
+7. `migrations/0007_ibadah_salah_conditions.sql` — يضيف حكم "شروط الصلاة" (شروط الوجوب وشروط الصحة) ضمن قسم أحكام الصلاة.
+8. `migrations/0008_ibadah_sawm_definition.sql` — يضيف حكم "الصيام: تعريفه وأنواعه" كمدخل عام ضمن قسم أحكام الصيام.
 
-> إذا كانت قاعدة البيانات الجديدة ستُنشأ من `schema.sql`، نفّذ `0004_restore_announcements.sql` بعده. لا تعاود تنفيذ `0002_drop_announcements.sql` بعد تفعيل الإعلانات.
+> إذا كانت قاعدة البيانات الجديدة ستُنشأ من `schema.sql`، نفّذ `0004_restore_announcements.sql` ثم `0005_ibadah_rulings.sql` ثم `0006_ibadah_definitions.sql` ثم `0007_ibadah_salah_conditions.sql` ثم `0008_ibadah_sawm_definition.sql` بالترتيب. لا تعاود تنفيذ `0002_drop_announcements.sql` بعد تفعيل الإعلانات.
 
 ## إنشاء أول حساب إدارة (Admin)
 

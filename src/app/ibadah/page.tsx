@@ -1,36 +1,47 @@
 import Link from "next/link";
-import { BookOpenCheck, CalendarDays, CheckCircle2, HeartHandshake, MoonStar, Scale, Sparkles } from "lucide-react";
+import {
+  BookOpenCheck,
+  ChevronLeft,
+  Droplets,
+  Flower2,
+  HeartHandshake,
+  Landmark,
+  Moon,
+  Plane,
+  Scale,
+  type LucideIcon,
+} from "lucide-react";
 import SiteFooter from "@/components/SiteFooter";
 import SiteHeader from "@/components/SiteHeader";
+import { createClient } from "@/lib/supabase/server";
+import type { IbadahCategory } from "@/lib/types";
 
-const worshipSections = [
-  {
-    title: "الصلاة",
-    icon: MoonStar,
-    description: "عمود الدين وأقرب ما يكون العبد من ربه وهو ساجد.",
-    points: ["حافظ على الصلوات في أوقاتها", "أتمم الوضوء واستحضر النية", "أكثر من الدعاء في السجود"],
-  },
-  {
-    title: "الصيام",
-    icon: CalendarDays,
-    description: "عبادة تزكي النفس وتدرّبها على التقوى والصبر.",
-    points: ["استحضر نية الصيام", "احفظ لسانك وجوارحك", "عجّل الفطر عند تحقق الغروب"],
-  },
-  {
-    title: "الزكاة والصدقة",
-    icon: Scale,
-    description: "طهارة للمال ونماء للخير وتكافل بين أفراد المجتمع.",
-    points: ["تحرَّ المال المستحق للزكاة", "اسأل أهل العلم عن النصاب والحول", "اجعل لك صدقة جارية"],
-  },
-  {
-    title: "الحج والعمرة",
-    icon: BookOpenCheck,
-    description: "رحلة إيمانية عظيمة تُبنى على الإخلاص واتباع الهدي.",
-    points: ["تعلّم المناسك قبل السفر", "استفتِ فيما يشكل عليك", "أخلص النية لله وحده"],
-  },
-];
+const CATEGORY_ICONS: Record<string, LucideIcon> = {
+  Droplets,
+  Landmark,
+  Moon,
+  Scale,
+  Plane,
+  Flower2,
+  BookOpenCheck,
+};
 
-export default function IbadahPage() {
+export default async function IbadahPage() {
+  const supabase = await createClient();
+  const [{ data: categories, error: categoriesError }, { data: rulingCounts, error: rulingsError }] =
+    await Promise.all([
+      supabase.from("ibadah_categories").select("*").order("sort_order"),
+      supabase.from("ibadah_rulings").select("category_id").eq("verified", true),
+    ]);
+
+  if (categoriesError) throw new Error(`Ibadah categories fetch failed: ${categoriesError.message}`);
+  if (rulingsError) throw new Error(`Ibadah rulings count fetch failed: ${rulingsError.message}`);
+
+  const counts = new Map<string, number>();
+  for (const row of rulingCounts ?? []) {
+    counts.set(row.category_id, (counts.get(row.category_id) ?? 0) + 1);
+  }
+
   return (
     <main className="min-h-screen">
       <SiteHeader />
@@ -38,31 +49,34 @@ export default function IbadahPage() {
         <Link href="/" className="text-sm font-bold text-[var(--emerald)]">← العودة للرئيسية</Link>
         <section className="mt-10 max-w-3xl">
           <HeartHandshake className="text-[var(--emerald)]" size={42} />
-          <h1 className="mt-4 text-4xl font-black text-[var(--emerald-deep)]">العبادات</h1>
+          <h1 className="mt-4 text-4xl font-black text-[var(--emerald-deep)]">أحكام العبادات</h1>
           <p className="mt-4 text-base leading-8 text-[var(--muted)]">
-            دليل مختصر يساعدك على تنظيم عباداتك اليومية وفهم أبواب الطاعة الأساسية. للمسائل التفصيلية، اسأل أهل العلم.
+            أحكام فقهية موثّقة من مصادر سنّية معتمدة، مع رابط المصدر الأصلي لكل حكم للرجوع إليه والتحقق منه. للمسائل التفصيلية، اسأل أهل العلم.
           </p>
         </section>
 
         <section className="mt-10 grid gap-5 pb-16 sm:grid-cols-2">
-          {worshipSections.map(({ title, icon: Icon, description, points }) => (
-            <article key={title} className="rounded-2xl border border-[var(--line)] bg-white p-6">
-              <div className="flex items-center gap-3">
-                <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#e7f1eb] text-[var(--emerald)]"><Icon size={22} /></span>
-                <h2 className="text-xl font-black text-[var(--emerald-deep)]">{title}</h2>
-              </div>
-              <p className="mt-5 leading-7 text-[var(--muted)]">{description}</p>
-              <ul className="mt-5 space-y-3 border-t border-[var(--line)] pt-5 text-sm text-[var(--emerald-deep)]">
-                {points.map((point) => <li key={point} className="flex items-start gap-2"><CheckCircle2 className="mt-0.5 shrink-0 text-[var(--emerald)]" size={16} />{point}</li>)}
-              </ul>
-            </article>
-          ))}
+          {((categories as IbadahCategory[]) ?? []).map((category) => {
+            const Icon = CATEGORY_ICONS[category.icon] ?? HeartHandshake;
+            const count = counts.get(category.id) ?? 0;
+            return (
+              <Link
+                key={category.id}
+                href={`/ibadah/${category.slug}`}
+                className="group flex items-center gap-4 rounded-2xl border border-[var(--line)] bg-white p-6 transition hover:border-[var(--emerald)]"
+              >
+                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#e7f1eb] text-[var(--emerald)]">
+                  <Icon size={22} />
+                </span>
+                <span className="flex-1">
+                  <strong className="block text-lg font-black text-[var(--emerald-deep)]">{category.name}</strong>
+                  <small className="text-xs text-[var(--muted)]">{count} حكمًا</small>
+                </span>
+                <ChevronLeft className="text-[var(--muted)] transition group-hover:text-[var(--emerald)]" size={18} />
+              </Link>
+            );
+          })}
         </section>
-
-        <aside className="mb-16 flex items-start gap-3 rounded-2xl bg-[#e5f0ea] p-5 text-sm leading-7 text-[var(--emerald-deep)]">
-          <Sparkles className="mt-1 shrink-0 text-[var(--amber)]" size={18} />
-          اجعل القليل الدائم أحب إليك من الكثير المنقطع، وابدأ بخطوة عملية واحدة اليوم.
-        </aside>
       </div>
       <SiteFooter />
     </main>
