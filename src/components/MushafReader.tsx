@@ -22,9 +22,18 @@ export default function MushafReader({ initialPage = 1, restoreProgress = true }
   const [page, setPage] = useState(safePage(initialPage));
   const [zoom, setZoom] = useState(1);
   const [imageError, setImageError] = useState(false);
+  const [isImageLoading, setIsImageLoading] = useState(true);
   const [bookmarks, setBookmarks] = useState<number[]>([]);
   const [pageInput, setPageInput] = useState(String(safePage(initialPage)));
   const touchStart = useRef<number | null>(null);
+
+  useEffect(() => {
+    [page - 1, page + 1].forEach((nearbyPage) => {
+      if (nearbyPage < 1 || nearbyPage > 604) return;
+      const preloader = new window.Image();
+      preloader.src = pagePath(nearbyPage);
+    });
+  }, [page]);
 
   useEffect(() => {
     queueMicrotask(() => {
@@ -34,6 +43,8 @@ export default function MushafReader({ initialPage = 1, restoreProgress = true }
         const safe = safePage(restored);
         setPage(safe);
         setPageInput(String(safe));
+        setIsImageLoading(true);
+        setImageError(false);
       }
 
       try {
@@ -51,6 +62,7 @@ export default function MushafReader({ initialPage = 1, restoreProgress = true }
     setPageInput(String(safe));
     setZoom(1);
     setImageError(false);
+    setIsImageLoading(true);
     localStorage.setItem(PROGRESS_KEY, String(safe));
     window.history.replaceState(null, "", `/quran/reader?page=${safe}`);
   }
@@ -116,16 +128,31 @@ export default function MushafReader({ initialPage = 1, restoreProgress = true }
             style={{ transform: `scale(${zoom})` }}
           >
             {!imageError ? (
-              <Image
-                src={pagePath(page)}
-                alt={`صفحة القرآن رقم ${page}`}
-                fill
-                sizes="(max-width: 768px) 100vw, 720px"
-                className="object-contain"
-                priority={page === 1}
-                loading={page === 1 ? "eager" : "lazy"}
-                onError={() => setImageError(true)}
-              />
+              <>
+                <Image
+                  key={page}
+                  src={pagePath(page)}
+                  alt={`صفحة القرآن رقم ${page}`}
+                  fill
+                  sizes="(max-width: 768px) 100vw, 720px"
+                  className={`object-contain transition-opacity duration-150 ${isImageLoading ? "opacity-0" : "opacity-100"}`}
+                  priority={page === 1}
+                  loading={page === 1 ? "eager" : "lazy"}
+                  onLoad={() => setIsImageLoading(false)}
+                  onError={() => {
+                    setIsImageLoading(false);
+                    setImageError(true);
+                  }}
+                />
+                {isImageLoading && (
+                  <div className="absolute inset-0 z-10 grid place-items-center bg-[#fffdf7]" role="status" aria-label={`جاري تحميل صفحة القرآن رقم ${page}`}>
+                    <div className="flex flex-col items-center gap-3 text-[#8a642c]">
+                      <div className="h-7 w-7 animate-spin rounded-full border-2 border-[#d8c49a] border-t-[#9b783d]" />
+                      <span className="text-xs font-bold">جاري تحميل الصفحة {page}</span>
+                    </div>
+                  </div>
+                )}
+              </>
             ) : (
               <div className="flex h-full items-center justify-center p-8 text-center text-sm font-bold text-[#7a5d35]">
                 <div>
