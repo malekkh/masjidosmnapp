@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ChevronLeft, ExternalLink } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 import SiteFooter from "@/components/SiteFooter";
 import SiteHeader from "@/components/SiteHeader";
 import { createClient } from "@/lib/supabase/server";
@@ -50,10 +50,6 @@ export default async function IbadahCategoryPage({ params }: { params: Promise<{
               >
                 <span className="flex-1">
                   <strong className="block text-base font-bold text-[var(--emerald-deep)]">{ruling.title}</strong>
-                  <small className="mt-1 flex items-center gap-1.5 text-xs text-[var(--muted)]">
-                    <ExternalLink size={12} /> {ruling.source_name}
-                    {ruling.scholar ? ` · ${ruling.scholar}` : ""}
-                  </small>
                 </span>
                 <ChevronLeft className="shrink-0 text-[var(--muted)] transition group-hover:text-[var(--emerald)]" size={18} />
               </Link>
