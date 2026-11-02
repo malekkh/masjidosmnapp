@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { BookOpen, ChevronLeft } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import { getSurahList } from "@/lib/quran";
@@ -14,9 +14,8 @@ export default async function QuranPage() {
         <Link href="/" className="text-sm font-bold text-[var(--emerald)]">
           ← العودة للرئيسية
         </Link>
-        <div className="mt-8 flex items-center justify-between">
+        <div className="mt-8">
           <h1 className="text-4xl font-black text-[var(--emerald-deep)]">القرآن الكريم</h1>
-          <BookOpen className="text-[var(--emerald)]" size={40} />
         </div>
 
         {surahs.length === 0 ? (
