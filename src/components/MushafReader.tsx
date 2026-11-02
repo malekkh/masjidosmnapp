@@ -68,7 +68,7 @@ export default function MushafReader({ initialPage = 1, restoreProgress = true }
   function handleTouchEnd(clientX: number) {
     if (touchStart.current === null || zoom > 1) return;
     const distance = clientX - touchStart.current;
-    if (Math.abs(distance) > 55) navigate(page + (distance < 0 ? 1 : -1));
+    if (Math.abs(distance) > 55) navigate(page + (distance < 0 ? -1 : 1));
     touchStart.current = null;
   }
 
