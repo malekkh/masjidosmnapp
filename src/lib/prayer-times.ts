@@ -56,3 +56,24 @@ export async function getTodayPrayerTimes(): Promise<PrayerTimesResult | null> {
 export function prayerLabel(key: keyof PrayerTimes) {
   return PRAYER_LABELS_AR[key];
 }
+
+export function formatPrayerTime(time: string): string {
+  const match = /^(\d{1,2}):(\d{2})(?:\s*(AM|PM))?$/i.exec(time.trim());
+  if (!match) return time;
+
+  const hour = Number(match[1]);
+  const minute = match[2];
+  const existingPeriod = match[3]?.toUpperCase();
+
+  if (!Number.isInteger(hour) || hour < 0 || hour > 23) return time;
+
+  const hour12 = hour % 12 || 12;
+  if (existingPeriod === "PM") {
+    return `${hour === 12 ? 12 : hour % 12}:${minute}`;
+  }
+  if (existingPeriod === "AM") {
+    return `${hour === 0 ? 12 : hour}:${minute}`;
+  }
+
+  return `${hour12}:${minute}`;
+}

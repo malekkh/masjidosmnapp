@@ -3,7 +3,7 @@ import Link from "next/link";
 import HonorificSuffix from "@/components/HonorificSuffix";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
-import { getTodayPrayerTimes, prayerLabel, type PrayerTimes } from "@/lib/prayer-times";
+import { formatPrayerTime, getTodayPrayerTimes, prayerLabel, type PrayerTimes } from "@/lib/prayer-times";
 import { MOSQUE_LOCATION_NAME, PRAYER_TIMES_SOURCE_NAME } from "@/lib/constants";
 
 const quickLinks = [
@@ -56,7 +56,7 @@ export default async function Home() {
               {PRAYER_ORDER.map((key) => (
                 <div key={key} className="rounded-xl bg-white/7 px-1 py-3 text-center">
                   <p className="text-xs opacity-75">{prayerLabel(key)}</p>
-                  <p className="mt-1 text-lg font-bold">{prayerTimes.timings[key]}</p>
+                  <p className="mt-1 text-lg font-bold">{formatPrayerTime(prayerTimes.timings[key])}</p>
                 </div>
               ))}
             </div>
